@@ -2,31 +2,21 @@
 
 ## 📜 Description
 
-EnseaSH is a lightweight micro shell developed as a synthesis practical work (“TP de Synthèse”) for the 2nd year of the Computer Science Major at ENSEA.[file:1]  
-It explores core system programming concepts such as process creation, signal handling, file descriptor management, and execution time measurement through a progressive set of shell features.[file:1]
+EnseaSH is a lightweight micro shell developed as a synthesis practical work (“TP de Synthèse”) for the 2nd year of the Computer Science Major at ENSEA.
+It explores core system programming concepts such as process creation, signal handling, file descriptor management, and execution time measurement through a progressive set of shell features.
 
 ## 🎯 Project Goals
 
-- Understand how a shell interacts with the operating system using system calls such as `fork`, `exec`, and `wait`.[file:1]  
-- Practice process management, signals, and file descriptor manipulation (redirections, pipes, background jobs).[file:1]  
-- Measure and display execution time using `clock_gettime` to analyze command performance.[file:1]  
+- Understand how a shell interacts with the operating system using system calls such as `fork`, `exec`, and `wait`.
+- Practice process management, signals, and file descriptor manipulation (redirections, pipes, background jobs).  
+- Measure and display execution time using `clock_gettime` to analyze command performance. 
 
 ## 🧰 Technical Constraints
 
-- 🚫 **No `printf`**: Standard I/O calls like `printf` are avoided; low-level I/O with `write` is preferred.[file:1]  
-- 🚫 **No `system()`**: The `system` function is forbidden; only the `exec` family is used to run external programs.[file:1]  
-- ✅ **Code quality**: No “magic numbers”, clear English identifiers, and modular, well-structured functions.[file:1]  
-- 🔤 **String handling**: Use `string.h` and safer `strn*` functions for manipulating character buffers.[file:1]  
-
-## 🏫 Course Information
-
-- Course: 2nd Year — Computer Science Major at ENSEA.[file:1]  
-- Practical work: “Ensea in the Shell” (EnseaSH).[file:1]  
-
-## ✍️ Authors
-
-- Aoudia Yanis  
-- Ziane Ismael
+- 🚫 **No `printf`**: Standard I/O calls like `printf` are avoided; low-level I/O with `write` is preferred. 
+- 🚫 **No `system()`**: The `system` function is forbidden; only the `exec` family is used to run external programs. 
+- ✅ **Code quality**: No “magic numbers”, clear English identifiers, and modular, well-structured functions. 
+- 🔤 **String handling**: Use `string.h` and safer `strn*` functions for manipulating character buffers. 
 
 
 ## Features Status
@@ -42,3 +32,9 @@ It explores core system programming concepts such as process creation, signal ha
 | Q7       | Parse `<` and `>` redirections, open files, and use dup2 for stdin/stdout before exec | No      |
 | Q8       | Parse pipe operator, create a pipe, fork twice, and connect processes with dup2 | No       |
 | Q9       | Handle `&` background jobs with non-blocking wait and display job completion      | No          |
+
+## 🏫 Course Information
+
+- Course: 2nd Year — Computer Science Major at ENSEA.
+- Practical work: “Ensea in the Shell” (EnseaSH).
+- Aoudia Yanis and Ziane Ismael

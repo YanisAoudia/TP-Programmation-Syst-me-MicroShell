@@ -32,6 +32,7 @@ void enseash(void){
 
         if (nread <= 0){
             // Stops the loop if reading input fails or reaches end of file
+            printscript("Bye Bye...\n");
             break;
         } 
         
@@ -56,6 +57,12 @@ void enseash(void){
         else {
             // The father waits for the child to finish
             wait(&status); 
+        }
+
+        if (strcmp(stock, exit_1)==0){
+            // Exit command
+            printscript("Bye Bye...\n");
+            break;
         }
     }
 }

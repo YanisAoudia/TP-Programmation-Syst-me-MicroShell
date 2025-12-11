@@ -7,7 +7,7 @@ It explores core system programming concepts such as process creation, signal ha
 
 ## 🎯 Project Goals
 
-- Understand how a shell interacts with the operating system using system calls such as `fork`, `exec`, and `wait`.
+- Understand how a shell interacts with the operating system using system calls such as `fork`, `exec`, and `wait` .
 - Practice process management, signals, and file descriptor manipulation (redirections, pipes, background jobs).  
 - Measure and display execution time using `clock_gettime` to analyze command performance. 
 

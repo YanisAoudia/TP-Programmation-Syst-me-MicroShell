@@ -37,4 +37,4 @@ It explores core system programming concepts such as process creation, signal ha
 
 - Course: 2nd Year — Computer Science Major at ENSEA.
 - Practical work: “Ensea in the Shell” (EnseaSH).
-- Aoudia Yanis and Ziane Ismael
+- By Aoudia Yanis and Ziane Ismael

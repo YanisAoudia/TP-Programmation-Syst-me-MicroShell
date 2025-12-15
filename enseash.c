@@ -10,15 +10,32 @@
 
 const char welcome1[]="Bienvenue dans le Shell ENSEA.\n";
 const char welcome2[]="Pour quitter, tapez 'exit'.\n";
-const char prompt[]="enseash %";
 const char exit_1[]="exit";
 
 void printscript(const char *script){
     write(STDOUT_FILENO, script, strlen(script));
 }
+
+void update_prompt(char *dyn_prompt, int status){
+    if (WIFEXITED(status)){
+        // Child exited normally, get exit code
+        int code=WEXITSTATUS(status);
+        snprintf(dyn_prompt, 64, "enseash [exit:%d] %%", code);
+    } 
+    else if (WIFSIGNALED(status)){
+        // Child killed by signal, get signal number
+        int sig=WTERMSIG(status);
+        snprintf(dyn_prompt, 64, "enseash [sign:%d] %%", sig);
+    } 
+    else{
+        // Basic prompt
+        snprintf(dyn_prompt, 64, "enseash %%");
+    }
+}
   
 void enseash(void){
     char stock[INPUT_BUFSIZE];
+    char dyn_prompt[64]="enseash %";
     ssize_t nread;
     int status; 
     pid_t pid;
@@ -27,7 +44,7 @@ void enseash(void){
     printscript(welcome2);
 
     while(1){
-        printscript(prompt);        
+        printscript(dyn_prompt);        
         nread=read(STDOUT_FILENO, stock, INPUT_BUFSIZE-1);
 
         if (nread <= 0){
@@ -39,6 +56,12 @@ void enseash(void){
         stock[nread]='\0';
         if (stock[nread-1]=='\n'){
             stock[nread-1]='\0';
+        }
+        
+        if (strcmp(stock, exit_1)==0){
+            // Exit command
+            printscript("Bye Bye...\n");
+            break;
         }
 
         pid=fork(); // Creation of the child
@@ -57,12 +80,8 @@ void enseash(void){
         else {
             // The father waits for the child to finish
             wait(&status); 
-        }
-
-        if (strcmp(stock, exit_1)==0){
-            // Exit command
-            printscript("Bye Bye...\n");
-            break;
+            // Update prompt with last status
+            update_prompt(dyn_prompt, status); 
         }
     }
 }

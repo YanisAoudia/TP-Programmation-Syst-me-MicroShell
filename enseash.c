@@ -4,8 +4,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #define INPUT_BUFSIZE 128
+#define _POSIX_C_SOURCE 199309L
 
 
 const char welcome1[]="Bienvenue dans le Shell ENSEA.\n";
@@ -16,16 +18,16 @@ void printscript(const char *script){
     write(STDOUT_FILENO, script, strlen(script));
 }
 
-void update_prompt(char *dyn_prompt, int status){
+void update_prompt(char *dyn_prompt, int status, long elapsed_ms){
     if (WIFEXITED(status)){
         // Child exited normally, get exit code
         int code=WEXITSTATUS(status);
-        snprintf(dyn_prompt, 64, "enseash [exit:%d] %%", code);
+        snprintf(dyn_prompt, 64, "enseash [exit:%d|%ldms] %%", code, elapsed_ms);
     } 
     else if (WIFSIGNALED(status)){
         // Child killed by signal, get signal number
         int sig=WTERMSIG(status);
-        snprintf(dyn_prompt, 64, "enseash [sign:%d] %%", sig);
+        snprintf(dyn_prompt, 64, "enseash [sign:%d|%ldms] %%", sig, elapsed_ms);
     } 
     else{
         // Basic prompt
@@ -39,13 +41,15 @@ void enseash(void){
     ssize_t nread;
     int status; 
     pid_t pid;
+    struct timespec t_start, t_end;
+    long elapsed_ms;
 
     printscript(welcome1);
     printscript(welcome2);
 
     while(1){
         printscript(dyn_prompt);        
-        nread=read(STDOUT_FILENO, stock, INPUT_BUFSIZE-1);
+        nread=read(STDIN_FILENO, stock, INPUT_BUFSIZE-1);
 
         if (nread <= 0){
             // Stops the loop if reading input fails or reaches end of file
@@ -64,6 +68,7 @@ void enseash(void){
             break;
         }
 
+        clock_gettime(CLOCK_MONOTONIC, &t_start);
         pid=fork(); // Creation of the child
 
         if (pid==-1) {
@@ -80,8 +85,10 @@ void enseash(void){
         else {
             // The father waits for the child to finish
             wait(&status); 
+            clock_gettime(CLOCK_MONOTONIC, &t_end);
+            elapsed_ms=(t_end.tv_sec-t_start.tv_sec)*1000+(t_end.tv_nsec-t_start.tv_nsec)/1000000;
             // Update prompt with last status
-            update_prompt(dyn_prompt, status); 
+            update_prompt(dyn_prompt, status, elapsed_ms); 
         }
     }
 }

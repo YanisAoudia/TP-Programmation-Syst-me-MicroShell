@@ -7,7 +7,6 @@
 #include <time.h>
 
 #define INPUT_BUFSIZE 128
-#define _POSIX_C_SOURCE 199309L
 
 
 const char welcome1[]="Bienvenue dans le Shell ENSEA.\n";
@@ -34,9 +33,22 @@ void update_prompt(char *dyn_prompt, int status, long elapsed_ms){
         snprintf(dyn_prompt, 64, "enseash %%");
     }
 }
+
+//cut_cmd cut the command in different arguments
+void cut_cmd(char* prog, char* argv[]){
+    int i=0;
+    char *cut=strtok(prog, " ");
+    while ((cut!=0) && (i<(INPUT_BUFSIZE/2))){
+            argv[i]=cut;
+            i++;
+            cut=strtok(NULL, " ");
+    }
+    argv[i]=NULL;
+}
   
 void enseash(void){
     char stock[INPUT_BUFSIZE];
+    char* argv[INPUT_BUFSIZE/2];
     char dyn_prompt[64]="enseash %";
     ssize_t nread;
     int status; 
@@ -61,6 +73,8 @@ void enseash(void){
         if (stock[nread-1]=='\n'){
             stock[nread-1]='\0';
         }
+
+        cut_cmd(stock, argv);
         
         if (strcmp(stock, exit_1)==0){
             // Exit command
@@ -77,7 +91,7 @@ void enseash(void){
         }
         else if (pid==0) {
             // Child tries to run the command (here fortune and date for instance)
-            execlp(stock, stock, (char *)NULL);
+            execvp(argv[0], argv);
             // If execlp returns, it failed
             printscript("Commande inconnue\n");
             exit(EXIT_FAILURE); // We kill the child process
